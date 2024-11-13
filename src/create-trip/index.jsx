@@ -3,11 +3,22 @@ import { chatSession } from '@/services/Almodal';
 import React, { useEffect, useState } from 'react'
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete'
 import { toast } from 'sonner';
+import { FcGoogle} from "react-icons/fc";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Button } from '@/components/ui/button';
 
 
 function CreateTrip() {
   const [place,setPlace]=useState();
-
+  const [openDialoge,setOpenDialoge]=useState(false);
   const[formData,setFormData]=useState([]);
 
   const handleInputChange=(name,value)=>{
@@ -29,6 +40,7 @@ console.log(formData);
 const OnGenerateTrip=async()=>{
   const user=localStorage.getItem('user');
   if(!user){
+    setOpenDialoge(true);
     toast("Please login to generate trip");
     return;
   }
@@ -46,7 +58,19 @@ console.log(FINAL_PROMPT);
 const result=await chatSession.sendMessage(FINAL_PROMPT);
 console.log(result?.response?.text());
 }
-
+const getUserProfile=(tokenInfo)=>{
+  axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${tokenInfo?.access_token}`, {
+    headers: {
+      Authorization: `Bearer ${tokenInfo?.access_token}`,
+      Accept: 'application/json'
+    }
+  }).then((res)=>{
+    console.log(res);
+    localStorage.setItem('user',JSON.stringify(res?.data));
+    setOpenDialoge(false);
+    OnGenerateTrip();
+  })
+}
   return (
     // <div className=' sm:px-10 md:px-32 lg:px-56 xl:px-10 mt-10'>
 
@@ -125,6 +149,19 @@ console.log(result?.response?.text());
             Generate Trip
           </button>
         </div>
+        <Dialog open={openDialoge}>
+  <DialogContent>
+    <DialogHeader>
+      <DialogDescription>
+      <img src="logo.png" className="w-[100p] h-[50px]"></img>
+      <h2 className='font-bold text-lg mt-7'>Sign in with Google</h2>
+      <p>Sign in to App with Google authentication securely</p>
+      
+      </DialogDescription>
+    </DialogHeader>
+  </DialogContent>
+</Dialog>
+
       </div>
     </div>
 
