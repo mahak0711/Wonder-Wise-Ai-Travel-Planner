@@ -27,6 +27,11 @@ console.log(formData);
 
 
 const OnGenerateTrip=async()=>{
+  const user=localStorage.getItem('user');
+  if(!user){
+    toast("Please login to generate trip");
+    return;
+  }
   if(formData?.numberOfDays>5 &&! formData?.location ||!formData?.budget ||!formData?.travelers){
   toast("Please fill all the fields");
     return;
