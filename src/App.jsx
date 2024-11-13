@@ -8,6 +8,8 @@ import Hero from "./components/custom/Hero";
 import CreateTrip from "./create-trip/index.jsx";
 import Header from "./components/custom/Header";
 import SignIn from "./components/custom/SignIn";
+import React from "react";
+
 
 
 function App() {
