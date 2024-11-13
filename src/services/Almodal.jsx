@@ -4,7 +4,7 @@ import {
   HarmBlockThreshold,
 } from "@google/generative-ai";
 
-const apiKey = process.env.GEMINI_API_KEY;
+const apiKey = import.meta.env.VITE_GOOGLE_GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(apiKey);
 
 const modal = genAI.getGenerativeModal({
@@ -16,5 +16,5 @@ const generationConfig = {
     topP:0.95,
     topK:64,
     maxOutputToken:8192,
-    reponseMimeType
+    reponseMimeType:"application/json",
 }
