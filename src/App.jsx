@@ -9,7 +9,7 @@ import CreateTrip from "./create-trip/index.jsx";
 import Header from "./components/custom/Header";
 import SignIn from "./components/custom/SignIn";
 import React from "react";
-
+import ViewTrip from "./view-trip/[tripId]/index.jsx";
 
 
 function App() {
@@ -23,6 +23,7 @@ function App() {
           <Route path="/" element={<Hero />} />
           <Route path="/create-trip" element={<CreateTrip />} />
           <Route path="/signin" element={<SignIn />} />
+          <Route path="/view-trip/:tripId" element={<ViewTrip />} />
         </Routes>
       </Router>
     </div>

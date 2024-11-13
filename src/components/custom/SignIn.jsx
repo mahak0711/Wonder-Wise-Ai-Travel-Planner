@@ -3,13 +3,17 @@ import { useNavigate } from "react-router-dom";
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import "./SignIn.css";
 
+const GOOGLE_CLIENT_ID = "859354826913-5gkf0m4t9baogncvkndaous91q7hj9sl.apps.googleusercontent.com";
+
 function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleLoginSuccess = (response) => {
     console.log("Login Success: currentUser:", response.profileObj);
-    navigate("/dashboard");
+
+    
+    navigate("/create-trip");
   };
 
   const handleLoginFailure = (response) => {
@@ -18,7 +22,7 @@ function SignIn() {
   };
 
   return (
-    <GoogleOAuthProvider clientId="1053907879342-oj488bcv1pparovv1s7tcf0gbskpdpk1.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-t to-[#5C0FC2] via-[#3C008B] from-[#000000]">
         <form className="form">
           <div className="flex-column">
@@ -134,8 +138,12 @@ function SignIn() {
           </div>
 
           <GoogleLogin
+            clientId={GOOGLE_CLIENT_ID}
             onSuccess={handleLoginSuccess}
             onError={handleLoginFailure}
+            useOneTap={false}
+            flow="implicit"
+            scope="email profile"
           />
         </form>
       </div>
