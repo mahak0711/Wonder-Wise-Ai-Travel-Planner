@@ -7,6 +7,9 @@ import { Button } from "./components/ui/button";
 import Hero from "./components/custom/Hero";
 import CreateTrip from "./create-trip/index.jsx";
 import Header from "./components/custom/Header";
+import SignIn from "./components/custom/SignIn";
+
+
 function App() {
   const [count, setCount] = useState(0);
 
@@ -16,12 +19,13 @@ function App() {
         <Header />
         <Routes>
           <Route path="/" element={<Hero />} />
-          <Route path="/create-trip" element={<CreateTrip />} />{" "}
-          {/* Add CreateTrip route */}
+          <Route path="/create-trip" element={<CreateTrip />} />
+          <Route path="/signin" element={<SignIn />} />
         </Routes>
       </Router>
     </div>
   );
 }
+
 
 export default App;
