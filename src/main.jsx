@@ -5,9 +5,11 @@ import "./index.css";
 import { createBrowserRouter, BrowserRouter } from "react-router-dom";
 import CreateTrip from "./create-trip/index.jsx";
 import Header from "./components/custom/Header.jsx";
+import { Toaster } from "sonner";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <App />
+    <Toaster/>
   </React.StrictMode>
 );

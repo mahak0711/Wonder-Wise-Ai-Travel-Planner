@@ -1,8 +1,47 @@
-import React from 'react'
+import { AI_PROMPT, SelectBudgetOption, SelectTravelsList } from '@/constants/options';
+import { chatSession } from '@/services/Almodal';
+import React, { useEffect, useState } from 'react'
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete'
+import { toast } from 'sonner';
 
 
 function CreateTrip() {
+  const [place,setPlace]=useState();
+
+  const[formData,setFormData]=useState([]);
+
+  const handleInputChange=(name,value)=>{
+    if(name=='numbeOfDays' && value>5 ){
+      console.log("Please enter a valid days");
+      return;
+    }
+    setFormData({
+      ...formData,
+      [name]:value
+    })
+  }
+
+useEffect(()=>{
+console.log(formData);
+},[formData])
+
+
+const OnGenerateTrip=async()=>{
+  if(formData?.numberOfDays>5 &&! formData?.location ||!formData?.budget ||!formData?.travelers){
+  toast("Please fill all the fields");
+    return;
+}
+const FINAL_PROMPT=AI_PROMPT
+.replace('{location}',formData?.location?.label)
+.replace('{totalDays}',formData?.numberOfDays)
+.replace('{traveler}',formData?.travelers)
+.replace('{budget}',formData?.budget)
+
+console.log(FINAL_PROMPT);
+const result=await chatSession.sendMessage(FINAL_PROMPT);
+console.log(result?.response?.text());
+}
+
   return (
     // <div className=' sm:px-10 md:px-32 lg:px-56 xl:px-10 mt-10'>
 
@@ -15,82 +54,69 @@ function CreateTrip() {
           Just provide some basic information, and our trip planner will generate a customized itinerary based on your preferences.
         </p>
 
-        {/* Destination */}
-        {/* <div className="mb-10">
-          <label className="block text-gray-700 font-semibold mb-4 text-2xl">What is your destination of choice?</label>
-          <select className="w-full px-6 py-5 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500 transition text-xl">
-            <option>Select...</option>
-          </select>
-        </div> */}
+        
         <div className="mb-10">
           <h2 className="block text-gray-700 font-semibold mb-4 text-2xl">What is your destination of choice?</h2>
-         <GooglePlacesAutocomplete apiKey={import.meta.env.VITE_GOOGLE_PLACE_API_KEY}/>
+         <GooglePlacesAutocomplete apiKey={import.meta.env.VITE_GOOGLE_PLACE_API_KEY}
+         selectProps={{
+          place,
+          onChange:(v)=>{setPlace(v);handleInputChange('location',v)}
+         }}
+         />
           
         </div>
 
 
+
         {/* Duration */}
         <div className="mb-10">
-          <label className="block text-gray-700 font-semibold mb-4 text-2xl">How many days are you planning for your trip?</label>
+          <h2 className="block text-gray-700 font-semibold mb-4 text-2xl">How many days are you planning for your trip?</h2>
           <input
             type="text"
             placeholder="Ex. 3"
             className="w-full px-6 py-5 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500 transition text-xl"
+          onChange={(e)=>handleInputChange('numbeOfDays',e.target.value)}
           />
         </div>
-
-        {/* Budget */}
-        <div className="mb-10">
-          <label className="block text-gray-700 font-semibold mb-4 text-2xl">What is your budget?</label>
-          <div className="flex gap-8">
-            <div className="flex-1 p-10 border rounded-lg hover:bg-gray-100 text-center cursor-pointer transition-shadow shadow-sm hover:shadow-lg">
-              <span role="img" aria-label="cheap" className="block text-green-500 text-4xl mb-4">💲</span>
-              <p className="font-semibold text-2xl">Cheap</p>
-              <p className="text-gray-500 text-lg">Stay conscious of costs</p>
-            </div>
-            <div className="flex-1 p-10 border rounded-lg hover:bg-gray-100 text-center cursor-pointer transition-shadow shadow-sm hover:shadow-lg">
-              <span role="img" aria-label="moderate" className="block text-yellow-500 text-4xl mb-4">💰</span>
-              <p className="font-semibold text-2xl">Moderate</p>
-              <p className="text-gray-500 text-lg">Keep costs on the average side</p>
-            </div>
-            <div className="flex-1 p-10 border rounded-lg hover:bg-gray-100 text-center cursor-pointer transition-shadow shadow-sm hover:shadow-lg">
-              <span role="img" aria-label="luxury" className="block text-teal-500 text-4xl mb-4">💳</span>
-              <p className="font-semibold text-2xl">Luxury</p>
-              <p className="text-gray-500 text-lg">Don't worry about cost</p>
-            </div>
+        {/* here the fake code */}
+      
+         <div>
+          <h2 className='text-xl my-3 font-medium'>What is your budget?</h2>
+          <div className='grid grid-cols-3 gap-5'>
+            {SelectBudgetOption.map((item,index)=>(
+              <div key={index} 
+              onClick={()=>handleInputChange('budget',item.title)}
+              className={`p-4 border rounded-lg hover:shadow-lg cursor-pointer
+              ${formData?.budget===item.title&&'shadow-lg border-black'}
+              `}>
+                <h2 className='text-4xl'>{item.icon}</h2>
+                <h2 className='font-bold text-lg'>{item.title}</h2>
+                <p className='text-sm text-gray-500'>{item.desc}</p>
+                </div>
+            ))}
           </div>
-        </div>
+         </div>
 
-        {/* Travel Companions */}
-        <div className="mb-10">
-          <label className="block text-gray-700 font-semibold mb-4 text-2xl">Who do you plan on traveling with?</label>
-          <div className="flex gap-8 flex-wrap">
-            <div className="flex-1 p-10 border rounded-lg hover:bg-gray-100 text-center cursor-pointer transition-shadow shadow-sm hover:shadow-lg">
-              <span role="img" aria-label="just me" className="block text-blue-500 text-4xl mb-4">🧍</span>
-              <p className="font-semibold text-2xl">Just Me</p>
-              <p className="text-gray-500 text-lg">A solo explorer</p>
-            </div>
-            <div className="flex-1 p-10 border rounded-lg hover:bg-gray-100 text-center cursor-pointer transition-shadow shadow-sm hover:shadow-lg">
-              <span role="img" aria-label="couple" className="block text-red-500 text-4xl mb-4">👫</span>
-              <p className="font-semibold text-2xl">A Couple</p>
-              <p className="text-gray-500 text-lg">Two travelers together</p>
-            </div>
-            <div className="flex-1 p-10 border rounded-lg hover:bg-gray-100 text-center cursor-pointer transition-shadow shadow-sm hover:shadow-lg">
-              <span role="img" aria-label="family" className="block text-green-500 text-4xl mb-4">👨‍👩‍👧‍👦</span>
-              <p className="font-semibold text-2xl">Family</p>
-              <p className="text-gray-500 text-lg">Fun for all ages</p>
-            </div>
-            <div className="flex-1 p-10 border rounded-lg hover:bg-gray-100 text-center cursor-pointer transition-shadow shadow-sm hover:shadow-lg">
-              <span role="img" aria-label="friends" className="block text-purple-500 text-4xl mb-4">⛵</span>
-              <p className="font-semibold text-2xl">Friends</p>
-              <p className="text-gray-500 text-lg">A bunch of thrill-seekers</p>
-            </div>
+         <div>
+          <h2 className='text-xl my-3 font-medium'>Who do you plan to travel with?</h2>
+          <div className='grid grid-cols-3 gap-5 mt-5'>
+            {SelectTravelsList.map((item,index)=>(
+              <div key={index}
+              onClick={()=>handleInputChange('travelers',item.people)}
+              className={`p-4 border rounded-lg hover:shadow-lg cursor-pointer
+                ${formData?.travelers===item.people&&'shadow-lg border-black'}
+              `}>            
+                    <h2 className='text-4xl'>{item.icon}</h2>
+                <h2 className='font-bold text-lg'>{item.title}</h2>
+                <p className='text-sm text-gray-500'>{item.desc}</p>
+                </div>
+            ))}
           </div>
-        </div>
+         </div>
 
         {/* Generate Trip Button */}
         <div className="text-center mt-12">
-          <button className="px-10 py-5 bg-indigo-600 text-white font-semibold text-2xl rounded-lg shadow-lg hover:bg-indigo-700 transition">
+          <button onClick={OnGenerateTrip} className="px-10 py-5 bg-indigo-600 text-white font-semibold text-2xl rounded-lg shadow-lg hover:bg-indigo-700 transition">
             Generate Trip
           </button>
         </div>
