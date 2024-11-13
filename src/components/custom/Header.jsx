@@ -1,18 +1,22 @@
-import React from 'react'
-import { Button } from '../ui/button'
+import React from "react";
+import { Button } from "../ui/button";
 
 function Header() {
   return (
-    
-    <div className='p-2 shadow-sm flex justify-between items-center'>
-        <img src='logo.svg'></img>
-        <div>
-          <Button>
-            Sign In
-          </Button>
+    <div className="p-2 flex justify-between items-center">
+      <img src="logo.png" className="w-[100p] h-[50px]"></img>
+      <div className="w-5/12 flex flex-row justify-between">
+        <p>features</p>
+        <p>features</p>
+        <p>features</p>
+        <p>features</p>
+      </div>
+      <div className="flex flex-row justify-end gap-x-4">
+        <Button className="px-8">Sign In</Button>
+        <Button className="px-8">Wallet</Button>
+      </div>
     </div>
-    </div>
-  )
+  );
 }
 
-export default Header
+export default Header;
