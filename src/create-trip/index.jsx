@@ -1,4 +1,6 @@
 import React from 'react'
+import GooglePlacesAutocomplete from 'react-google-places-autocomplete'
+
 
 function CreateTrip() {
   return (
@@ -14,12 +16,18 @@ function CreateTrip() {
         </p>
 
         {/* Destination */}
-        <div className="mb-10">
+        {/* <div className="mb-10">
           <label className="block text-gray-700 font-semibold mb-4 text-2xl">What is your destination of choice?</label>
           <select className="w-full px-6 py-5 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500 transition text-xl">
             <option>Select...</option>
           </select>
+        </div> */}
+        <div className="mb-10">
+          <h2 className="block text-gray-700 font-semibold mb-4 text-2xl">What is your destination of choice?</h2>
+         <GooglePlacesAutocomplete apiKey={import.meta.env.VITE_GOOGLE_PLACE_API_KEY}/>
+          
         </div>
+
 
         {/* Duration */}
         <div className="mb-10">
