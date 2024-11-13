@@ -2,9 +2,9 @@ import React from 'react'
 
 function CreateTrip() {
   return (
-    <div className=' sm:px-10 md:px-32 lg:px-56 xl:px-10 mt-10'>
+    // <div className=' sm:px-10 md:px-32 lg:px-56 xl:px-10 mt-10'>
 
-<div className="min-h-screen flex items-center justify-center bg-gray-100 p-16">
+<div className="min-h-screen flex items-center justify-center bg-gray-100 p-16 font-poppins">
       <div className="w-full max-w-5xl bg-white p-16 rounded-xl shadow-xl border border-gray-200">
         <h2 className="text-5xl font-bold mb-8 text-center text-gray-800">
           Tell us your travel preferences <span role="img" aria-label="travel">🧳🌴</span>
@@ -18,7 +18,6 @@ function CreateTrip() {
           <label className="block text-gray-700 font-semibold mb-4 text-2xl">What is your destination of choice?</label>
           <select className="w-full px-6 py-5 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500 transition text-xl">
             <option>Select...</option>
-            {/* Add more options here */}
           </select>
         </div>
 
@@ -90,7 +89,7 @@ function CreateTrip() {
       </div>
     </div>
 
-    </div>
+    // {/* </div> */}
   )
 }
 
