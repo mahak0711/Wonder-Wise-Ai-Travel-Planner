@@ -1,9 +1,14 @@
+<<<<<<< Updated upstream
 import { AI_PROMPT, SelectBudgetOption, SelectTravelsList } from '@/constants/options';
 import { chatSession } from '@/services/Almodal';
 import React, { useEffect, useState } from 'react'
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete'
 import { toast } from 'sonner';
 
+=======
+import React from 'react'
+import GooglePlacesAutocomplete from 'react-google-places-autocomplete'
+>>>>>>> Stashed changes
 
 function CreateTrip() {
   const [place,setPlace]=useState();
@@ -59,6 +64,7 @@ console.log(result?.response?.text());
           Just provide some basic information, and our trip planner will generate a customized itinerary based on your preferences.
         </p>
 
+<<<<<<< Updated upstream
         
         <div className="mb-10">
           <h2 className="block text-gray-700 font-semibold mb-4 text-2xl">What is your destination of choice?</h2>
@@ -76,6 +82,19 @@ console.log(result?.response?.text());
         {/* Duration */}
         <div className="mb-10">
           <h2 className="block text-gray-700 font-semibold mb-4 text-2xl">How many days are you planning for your trip?</h2>
+=======
+        <div className="mb-4">
+          <h2 className="block text-gray-700 font-semibold mb-2">What is destination of choice?</h2>
+          <GooglePlacesAutocomplete apiKey={import.meta.env.VITE_GOOGLE_PLACE_API_KEY}/>
+          <select className="w-full px-4 py-2 border rounded-md">
+            <option>Select...</option>
+           
+          </select>
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-gray-700 font-semibold mb-2">How many days are you planning your trip?</label>
+>>>>>>> Stashed changes
           <input
             type="text"
             placeholder="Ex. 3"
