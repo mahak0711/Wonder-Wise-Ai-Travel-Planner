@@ -27,7 +27,8 @@
     "react-router-dom": "^6.28.0",
     "sonner": "^1.7.0",
     "tailwind-merge": "^2.5.4",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "unsplash-js": "^7.0.19"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",
