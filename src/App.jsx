@@ -10,6 +10,7 @@ import Header from "./components/custom/Header";
 import SignIn from "./components/custom/SignIn";
 import React from "react";
 import ViewTrip from "./view-trip/[tripId]/index.jsx";
+import { UserProvider } from './contexts/UserContext';
 
 
 function App() {
@@ -17,15 +18,17 @@ function App() {
 
   return (
     <div className="h-screen w-screen bg-gradient-to-t to-[#5C0FC2] via-[#3C008B] from-[#000000]">
-      <Router>
-        <Header />
-        <Routes>
-          <Route path="/" element={<Hero />} />
-          <Route path="/create-trip" element={<CreateTrip />} />
-          <Route path="/signin" element={<SignIn />} />
-          <Route path="/view-trip/:tripId" element={<ViewTrip />} />
-        </Routes>
-      </Router>
+      <UserProvider>
+        <Router>
+          <Header />
+          <Routes>
+            <Route path="/" element={<Hero />} />
+            <Route path="/create-trip" element={<CreateTrip />} />
+            <Route path="/signin" element={<SignIn />} />
+            <Route path="/view-trip/:tripId" element={<ViewTrip />} />
+          </Routes>
+        </Router>
+      </UserProvider>
     </div>
   );
 }
