@@ -2,17 +2,23 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import "./SignIn.css";
+import { useUser } from '../../contexts/UserContext';
 
 const GOOGLE_CLIENT_ID = "859354826913-5gkf0m4t9baogncvkndaous91q7hj9sl.apps.googleusercontent.com";
 
 function SignIn() {
+  const { setCurrentUser } = useUser();
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleLoginSuccess = (response) => {
-    console.log("Login Success: currentUser:", response.profileObj);
-
-    
+    const userData = {
+      _id: response.profileObj.googleId,
+      email: response.profileObj.email,
+      name: response.profileObj.name,
+    };
+    setCurrentUser(userData);
+    console.log("Login Success: currentUser:", userData);
     navigate("/create-trip");
   };
 
