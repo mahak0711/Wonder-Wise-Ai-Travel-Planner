@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete'
 import { toast } from 'sonner';
 import { FcGoogle} from "react-icons/fc";
+import { useNavigate } from 'react-router-dom';
 
 import {
   Dialog,
@@ -14,9 +15,23 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Button } from '@/components/ui/button';
+import { useUser } from '../contexts/UserContext';
 
 
 function CreateTrip() {
+  const { currentUser } = useUser();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!currentUser) {
+      navigate('/signin');
+    }
+  }, [currentUser, navigate]);
+
+  if (!currentUser) {
+    return <div>Please sign in to continue...</div>;
+  }
+
   const [place,setPlace]=useState();
   const [openDialoge,setOpenDialoge]=useState(false);
   const[formData,setFormData]=useState([]);
@@ -94,6 +109,10 @@ const getUserProfile=(tokenInfo)=>{
 
   const handleGenerateTrip = async () => {
     try {
+      if (!currentUser) {
+        throw new Error('Please sign in to generate a trip');
+      }
+
       setIsLoading(true);
       setLoadingMessage('Generating your perfect trip...');
       
@@ -101,17 +120,21 @@ const getUserProfile=(tokenInfo)=>{
         location,
         days,
         budget,
-        travelCompanions
+        travelCompanions,
+        userId: currentUser._id
       };
       
-      // Make API call
-      const response = await fetch('your_api_endpoint', {
+      const response = await fetch('http://localhost:5173/api/trips/generate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(tripData),
       });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
       const responseData = await response.json();
       setItinerary(responseData);
