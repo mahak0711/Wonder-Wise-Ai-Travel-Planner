@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
@@ -8,16 +8,15 @@ import Hero from "./components/custom/Hero";
 import CreateTrip from "./create-trip/index.jsx";
 import Header from "./components/custom/Header";
 import SignIn from "./components/custom/SignIn";
-import React from "react";
 import ViewTrip from "./view-trip/[tripId]/index.jsx";
 import { UserProvider } from './contexts/UserContext';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <div className="h-screen w-screen bg-gradient-to-t to-[#5C0FC2] via-[#3C008B] from-[#000000]">
+    <GoogleOAuthProvider clientId="1053907879342-oj488bcv1pparovv1s7tcf0gbskpdpk1.apps.googleusercontent.com">
+      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}></GoogleOAuthProvider>
       <UserProvider>
         <Router>
           <Header />
@@ -29,7 +28,7 @@ function App() {
           </Routes>
         </Router>
       </UserProvider>
-    </div>
+    </GoogleOAuthProvider>
   );
 }
 
