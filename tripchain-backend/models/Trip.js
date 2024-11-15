@@ -2,8 +2,7 @@ import mongoose from 'mongoose';
 
 const tripSchema = new mongoose.Schema({
   user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    type: String,
     required: true
   },
   location: {
@@ -12,22 +11,31 @@ const tripSchema = new mongoose.Schema({
   },
   days: {
     type: Number,
+    required: true,
+    min: 1
+  },
+  budgetCategory: {
+    type: String,
+    enum: ['cheap', 'moderate', 'luxury'],
     required: true
   },
-  budget: {
-    type: Number,
+  travelGroup: {
+    type: String,
+    enum: ['solo', 'couple', 'family', 'friends'],
     required: true
   },
-  travelCompanions: {
-    type: Number,
-    required: true
+  itinerary: {
+    introduction: String,
+    days: [{
+      morning: [String],
+      lunch: String,
+      afternoon: [String],
+      dinner: String,
+      evening: [String],
+      accommodation: String
+    }],
+    tips: [String]
   },
-  itinerary: [{
-    day: Number,
-    activities: [String],
-    accommodations: String,
-    meals: [String]
-  }],
   createdAt: {
     type: Date,
     default: Date.now
