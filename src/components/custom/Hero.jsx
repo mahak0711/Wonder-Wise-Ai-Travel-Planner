@@ -32,6 +32,7 @@ function Hero() {
         src="globe.png"
         className="absolute bottom-0 z-[1] h-[480px] w-[910px]"
       ></img>
+     
     </div>
   );
 }
