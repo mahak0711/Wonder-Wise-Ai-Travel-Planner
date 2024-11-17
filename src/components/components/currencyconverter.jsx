@@ -21,7 +21,16 @@ const CurrencyConverter = ({ price }) => {
         INR: '₹',
     };
 
+    // Handle cases where price is undefined, null, or not a string
+    if (!price) {
+        return <span>Free</span>;
+    }
+
     const convertPrice = (price) => {
+        // If price is already "Free", return it as is
+        if (price === "Free")
+            return price;
+
         const numericPrice = parseFloat(price.replace(/[^0-9.]/g, ''));
         if (isNaN(numericPrice)) return price;
 

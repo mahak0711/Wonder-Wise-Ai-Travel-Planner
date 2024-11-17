@@ -7,11 +7,20 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api': {
-        target: 'http://localhost:5137',
+      '/api/places': {
+        target: 'https://maps.googleapis.com/maps/api/place/textsearch/json',
         changeOrigin: true,
-        secure: false,
-      },
+        rewrite: (path) => {
+          return path.replace(/^\/api\/places/, '');
+        },
+        configure: (proxy, options) => {
+          proxy.on('proxyReq', (proxyReq, req, res) => {
+            const url = new URL(proxyReq.path, 'http://dummy.com');
+            url.searchParams.append('key', process.env.VITE_GOOGLE_PLACE_API_KEY);
+            proxyReq.path = `${url.pathname}${url.search}`;
+          });
+        }
+      }
     },
   },
   resolve: {
