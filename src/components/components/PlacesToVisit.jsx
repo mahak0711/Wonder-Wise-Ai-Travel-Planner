@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import CurrencyConverter from "./CurrencyConverter";
+import CurrencyConverter from "./currencyconverter";
 import { FaMapMarkedAlt } from "react-icons/fa";
 import { Button } from "../ui/button";
 import { Link } from "react-router-dom";
