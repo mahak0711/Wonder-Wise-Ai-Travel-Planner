@@ -3,9 +3,19 @@ import { chatSession } from '@/services/Almodal';
 import React, { useEffect, useState } from 'react'
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete'
 import { toast } from 'sonner';
+<<<<<<< Updated upstream
 import { FcGoogle} from "react-icons/fc";
 import { useNavigate } from 'react-router-dom';
 
+=======
+import { FcGoogle } from "react-icons/fc";
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "@/services/fireBaseConfig";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import {auth} from "@/services/fireBaseConfig"
+import { signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+>>>>>>> Stashed changes
 import {
   Dialog,
   DialogContent,
@@ -15,11 +25,38 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Button } from '@/components/ui/button';
+<<<<<<< Updated upstream
 import { useUser } from '../contexts/UserContext';
 
 
 function CreateTrip() {
   const { currentUser } = useUser();
+=======
+
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+const retryWithDelay = async (fn, retries = 3, delayMs = 2000) => {
+  for (let i = 0; i < retries; i++) {
+    try {
+      return await fn();
+    } catch (error) {
+      if (i === retries - 1) throw error;
+      if (error.message?.includes('503') || error.message?.includes('overloaded')) {
+        await delay(delayMs * (i + 1)); // Exponential backoff
+        continue;
+      }
+      throw error;
+    }
+  }
+};
+
+function CreateTrip() {
+  const [place, setPlace] = useState();
+  const [formData, setFormData] = useState([]);
+  const [openDialoge, setOpenDialoge] = useState(false);
+  const [user, setUser] = useState(null);
+  const [Loading, setLoading] = useState(false);
+>>>>>>> Stashed changes
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -124,12 +161,131 @@ const getUserProfile=(tokenInfo)=>{
         userId: currentUser._id
       };
       
+<<<<<<< Updated upstream
       const response = await fetch('http://localhost:5173/api/trips/generate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(tripData),
+=======
+      localStorage.setItem('user', JSON.stringify(userData));
+      setUser(userData);
+      setOpenDialoge(false);
+      
+      if (typeof OnGenerateTrip === 'function') {
+        OnGenerateTrip();
+      }
+
+    } catch (error) {
+      console.error("Authentication error:", error);
+      toast.error("Failed to sign in. Please try again");
+    }
+  };
+
+  useEffect(() => {
+    const handleRedirectResult = async () => {
+      try {
+        const result = await getRedirectResult(auth);
+        if (result) {
+          const userData = {
+            email: result.user.email,
+            name: result.user.displayName,
+            picture: result.user.photoURL,
+            firebaseUid: result.user.uid
+          };
+          
+          localStorage.setItem('user', JSON.stringify(userData));
+          setUser(userData);
+          setOpenDialoge(false);
+          OnGenerateTrip();
+        }
+      } catch (error) {
+        console.error("Redirect result error:", error);
+        toast.error("Failed to complete sign in. Please try again.");
+      }
+    };
+
+    handleRedirectResult();
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log('User is signed in:', user.uid);
+      } else {
+        console.log('No user is signed in');
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const OnGenerateTrip = async () => {
+    localStorage.getItem('user');
+
+    if (!user) {
+      setOpenDialoge(true);
+      return;
+    }
+
+    if (formData?.numberOfDays > 5 && !formData?.location || !formData?.budget || !formData?.travelers) {
+      toast("Please fill all the fields");
+      return;
+    }
+    
+    setLoading(true);
+    
+    try {
+      const FINAL_PROMPT = AI_PROMPT
+        .replace('{location}', formData?.location?.label)
+        .replace('{totalDays}', formData?.numberOfDays)
+        .replace('{traveler}', formData?.travelers)
+        .replace('{budget}', formData?.budget);
+
+      console.log(FINAL_PROMPT);
+      
+      const result = await retryWithDelay(async () => {
+        const response = await chatSession.sendMessage(FINAL_PROMPT);
+        return response;
+      });
+      
+      SaveAiTrip(result?.response?.text());
+    } catch (error) {
+      console.error("AI Generation Error:", error);
+      if (error.message?.includes('503') || error.message?.includes('overloaded')) {
+        toast.error("The AI service is still overloaded after multiple attempts. Please try again later.");
+      } else {
+        toast.error("Failed to generate trip. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const SaveAiTrip = async (TripData) => {
+    setLoading(true);
+    
+    try {
+      // Check if user is authenticated
+      const currentUser = auth.currentUser;
+      if (!currentUser) {
+        toast.error("Please sign in to save your trip");
+        setOpenDialoge(true);
+        return;
+      }
+
+      const docId = Date.now().toString();
+      
+      // Ensure all required fields are present
+      await setDoc(doc(db, "AiTrips", docId), {
+        userSelection: formData,
+        tripData: JSON.parse(TripData),
+        userEmail: currentUser.email,
+        userId: currentUser.uid,  // This is crucial for the security rules
+        id: docId,
+        createdAt: new Date().toISOString()
+>>>>>>> Stashed changes
       });
 
       if (!response.ok) {
@@ -140,6 +296,11 @@ const getUserProfile=(tokenInfo)=>{
       setItinerary(responseData);
       console.log('Trip generated successfully');
       
+<<<<<<< Updated upstream
+=======
+      toast.success("Trip saved successfully!");
+      navigate(`/view-trip/${docId}`);
+>>>>>>> Stashed changes
     } catch (error) {
       console.error('Error generating trip:', error);
       setLoadingMessage('Error generating trip. Please try again.');
